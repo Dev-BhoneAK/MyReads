@@ -5,8 +5,9 @@ const Search = () => {
     return (
         <div className="search-books">
             <div className="search-books-bar">
-                <Link to="/">
-                    <a className="close-search">Close</a>
+                <Link to="/"
+                      className="close-search">
+                        Close
                 </Link>
                 <div className="search-books-input-wrapper">
                     <input
