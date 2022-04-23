@@ -4,7 +4,7 @@ import { getAll } from "../BooksAPI";
 import { useState, useEffect } from "react";
 import Bookshelf from "../components/Bookshelf";
 
-const Home = () => {
+const Home = ({booksOnBookshelf, changeBookshelf}) => {
 
   return (
     <div className="app">
@@ -14,9 +14,9 @@ const Home = () => {
           </div>
           <div className="list-books-content">
             <div>
-              <Bookshelf bookshelfTitle="Currently Reading"/>
-              <Bookshelf bookshelfTitle="Want to Read"/>
-              <Bookshelf bookshelfTitle="Read"/>
+              <Bookshelf bookshelfTitle="Currently Reading" books={booksOnBookshelf.currentlyReading} changeBookshelf={changeBookshelf}/>
+              <Bookshelf bookshelfTitle="Want to Read" books={booksOnBookshelf.wantToRead} changeBookshelf={changeBookshelf}/>
+              <Bookshelf bookshelfTitle="Read" books={booksOnBookshelf.read} changeBookshelf={changeBookshelf}/>
             </div>
           </div>
           <div className="open-search">

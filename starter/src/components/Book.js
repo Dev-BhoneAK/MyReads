@@ -1,6 +1,24 @@
 import React from 'react';
+import {useState} from "react";
+import {update} from "../BooksAPI";
 
-const Book = () => {
+const Book = ({book, changeBookshelf}) => {
+
+    const shelfTitle = {
+        'moveTo': 'Move to...',
+        'currentlyReading': 'Currently Reading',
+        'wantToRead': 'Want to Read',
+        'read': 'Read',
+        'none': 'None'
+    };
+
+    const updateBookshelf = (event, book) => {
+
+        const moveToBookshelf = event.target.value;
+        update(book, moveToBookshelf);
+        changeBookshelf(book, moveToBookshelf);
+    }
+
     return (
         <>
             <li>
@@ -11,26 +29,30 @@ const Book = () => {
                             style={{
                                 width: 128,
                                 height: 193,
-                                backgroundImage:
-                                    'url("http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api")',
+                                backgroundImage: `url(${book.imageLinks.thumbnail})`
                             }}
                         ></div>
                         <div className="book-shelf-changer">
-                            <select>
-                                <option value="none" disabled>
-                                    Move to...
-                                </option>
-                                <option value="currentlyReading">
-                                    Currently Reading
-                                </option>
-                                <option value="wantToRead">Want to Read</option>
-                                <option value="read">Read</option>
-                                <option value="none">None</option>
+                            <select onChange={(event) => updateBookshelf(event, book)} defaultValue={book.shelf}>
+                                {Object.keys(shelfTitle).map((key, index) => (
+                                    <option value={key} disabled={index === 0 && true} key={index}>
+                                        {shelfTitle[key]}
+                                    </option>
+                                ))}
+                                {/*<option value="none" disabled>*/}
+                                {/*    Move to...*/}
+                                {/*</option>*/}
+                                {/*<option value="currentlyReading">*/}
+                                {/*    Currently Reading*/}
+                                {/*</option>*/}
+                                {/*<option value="wantToRead">Want to Read</option>*/}
+                                {/*<option value="read" selected="true">Read</option>*/}
+                                {/*<option value="none">None</option>*/}
                             </select>
                         </div>
                     </div>
-                    <div className="book-title">To Kill a Mockingbird</div>
-                    <div className="book-authors">Harper Lee</div>
+                    <div className="book-title">{book.title}</div>
+                    <div className="book-authors">{book.authors[0]}</div>
                 </div>
             </li>
         </>
