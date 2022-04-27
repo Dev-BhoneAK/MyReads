@@ -5,7 +5,6 @@ import Search from "./pages/Search";
 import {Route, Routes} from "react-router-dom";
 import {getAll} from "./BooksAPI";
 
-
 function App() {
 
     const [booksOnBookshelf, setBooksOnBookshelf] = useState({
@@ -16,7 +15,6 @@ function App() {
 
     useEffect(async () => {
         const books = await getAll();
-        console.log(books);
         setBooksOnBookshelf({
             'currentlyReading': books.filter(book => book.shelf === "currentlyReading"),
             'wantToRead': books.filter(book => book.shelf === "wantToRead"),
@@ -24,19 +22,26 @@ function App() {
         });
     }, []);
 
-    const changeBookshelf = (currentBook, moveToBookshelf) => {
-
+    /**
+     * @description set state of booksOnBookshelf from movedBook's currentShelf to moveToBookshelf
+     * @function
+     * @param {object} movedBook - Moved Book Object which contains all information of book
+     * @param {string} moveToBookshelf - dynamic bookshelf title which book was moved to
+     * @param {string} currentShelf - dynamic bookshelf title which book was moved from
+     */
+    const changeBookshelf = (movedBook, moveToBookshelf, currentShelf) => {
+        const currentBookShelf = movedBook.shelf ? movedBook.shelf : currentShelf;
         setBooksOnBookshelf({
             ...booksOnBookshelf,
-            [currentBook.shelf]: booksOnBookshelf[currentBook.shelf].filter(book => book.id != currentBook.id),
-            [moveToBookshelf]: moveToBookshelf !== 'none' && booksOnBookshelf[moveToBookshelf].concat(currentBook)
+            [moveToBookshelf]: moveToBookshelf !== 'none' && booksOnBookshelf[moveToBookshelf].concat(movedBook),
+            [currentBookShelf]: currentBookShelf && booksOnBookshelf[currentBookShelf].filter(book => book.id != movedBook.id)
         })
     }
 
     return (
         <Routes>
           <Route exact path="/" element={<Home booksOnBookshelf={booksOnBookshelf} changeBookshelf={changeBookshelf}/>}/>
-          <Route path="/search" element={<Search/>}/>
+          <Route path="/search" element={<Search booksOnBookshelf={booksOnBookshelf} changeBookshelf={changeBookshelf}/>} />
       </Routes>
   )
 }
