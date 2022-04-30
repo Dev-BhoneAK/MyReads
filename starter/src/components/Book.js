@@ -1,5 +1,7 @@
-import React, {useEffect} from 'react';
-import {update} from "../BooksAPI";
+import React, {useEffect, useContext} from 'react';
+import {Link, useLocation} from 'react-router-dom';
+import {get, update} from "../BooksAPI";
+import {ChangeBookShelf} from "../contexts/ChangeBookShelf";
 import PropTypes from "prop-types";
 
 /**
@@ -9,9 +11,12 @@ import PropTypes from "prop-types";
  * @param {function} changeBookshelf - function which updates state of booksOnBookshelf in App
  * @param {string} currentShelf - indicates the book is on which shelf
  * @param {object} shelfTitle - list of options that will show inside select box
+ * @param {function} changeAlertState - function which updates state of alertState in Search
  */
-const Book = ({book, changeBookshelf, currentShelf, shelfTitle}) => {
+const Book = ({book, currentShelf, shelfTitle, changeAlertState}) => {
 
+        const changeBookshelf = React.useContext(ChangeBookShelf);
+        const location = useLocation();
     /**
      * @description invoke function of updating booksOnBookshelf state and update backend data to get persistant data
      * @function
@@ -23,20 +28,22 @@ const Book = ({book, changeBookshelf, currentShelf, shelfTitle}) => {
         const moveToBookshelf = event.target.value;
         update(book, moveToBookshelf);
         changeBookshelf(book, moveToBookshelf, currentShelf);
+        changeAlertState && changeAlertState();
     }
-
 return (
         <li>
             <div className="book">
                 <div className="book-top">
-                    <div
-                        className="book-cover"
-                        style={{
-                            width: 128,
-                            height: 193,
-                            backgroundImage: `url(${book.imageLinks && book.imageLinks.thumbnail})`
-                        }}
-                    ></div>
+                    <Link to={`/detail/${book.id}`} state={{from: location}}>
+                        <div
+                            className="book-cover"
+                            style={{
+                                width: 128,
+                                height: 193,
+                                backgroundImage: `url(${book.imageLinks && book.imageLinks.thumbnail})`
+                            }}
+                        ></div>
+                    </Link>
                     <div className="book-shelf-changer">
                         <select onChange={(event) => updateBookshelf(event, book)} defaultValue={currentShelf ? currentShelf : 'none'}>
                             {
@@ -57,8 +64,8 @@ return (
 
 Book.propTypes = {
     book: PropTypes.object.isRequired,
-    changeBookshelf: PropTypes.func.isRequired,
     currentShelf: PropTypes.string,
     shelfTitle: PropTypes.object.isRequired,
+    changeAlertState: PropTypes.func
 }
 export default Book;

@@ -5,11 +5,10 @@ import PropTypes from 'prop-types';
  * @description Represents a bookshelf component
  * @constructor
  * @param {string} bookshelfTitle - Title of bookshelf which displays as heading
- * @param {function} changeBookshelf - function which updates state of booksOnBookshelf in App.js
  * @param {array} books - list of books which is standing on particular shelf
  * @param {object} booksOnBookshelf - state object that contains all the books those are standing on bookshelves
  */
-const Bookshelf = ({bookshelfTitle, changeBookshelf, books, booksOnBookshelf}) => {
+const Bookshelf = ({bookshelfTitle, books, booksOnBookshelf}) => {
 
         const shelfTitle = {
             'moveTo': 'Move to...',
@@ -32,7 +31,6 @@ const Bookshelf = ({bookshelfTitle, changeBookshelf, books, booksOnBookshelf}) =
                                 <React.Fragment key={book.id}>
                                     <Book
                                         book={book}
-                                        changeBookshelf={changeBookshelf}
                                         currentShelf={currentShelf}
                                         shelfTitle={shelfTitle}
                                     />
@@ -47,7 +45,6 @@ const Bookshelf = ({bookshelfTitle, changeBookshelf, books, booksOnBookshelf}) =
 
 Bookshelf.propTypes = {
     bookshelfTitle: PropTypes.string.isRequired,
-    changeBookshelf: PropTypes.func.isRequired,
     books: PropTypes.array.isRequired,
     booksOnBookshelf: PropTypes.object.isRequired,
 }

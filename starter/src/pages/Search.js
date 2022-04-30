@@ -4,16 +4,18 @@ import {search} from "../BooksAPI";
 import Book from "../components/Book";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import Logo from '../icons/correct-tick.png';
 /**
  * @description Represents Search Page
  * @constructor
  * @param {object} booksOnBookshelf - state object that contains all the books those are standing on bookshelves
- * @param {function} changeBookshelf - function which updates state of booksOnBookshelf in App.js
  */
-const Search = ({booksOnBookshelf, changeBookshelf}) => {
+const Search = ({booksOnBookshelf}) => {
 
     const [inputValue, setInputValue] = useState("");
     const [searchBooks, setSearchBooks] = useState([]);
+    const [alertState, setAlertState] = useState(false);
+
     const shelfTitle = {
         'currentlyReading': 'Currently Reading',
         'wantToRead': 'Want to Read',
@@ -35,10 +37,28 @@ const Search = ({booksOnBookshelf, changeBookshelf}) => {
         searchQuery();
     },[inputValue]);
 
+    useEffect(() => {
+        let mounted = true;
+
+        setTimeout(() => {
+            mounted && setAlertState(false);
+        }, 3000);
+
+        return () => {
+            mounted = false;
+        }
+    }, [alertState]);
+
+    const changeAlertState = () => {
+
+        setAlertState(true);
+    }
+
     return (
         <div className="search-books">
+
             <div className="search-books-bar">
-                <Link to="/"
+                <Link to="/home"
                       className="close-search">
                         Close
                 </Link>
@@ -51,7 +71,15 @@ const Search = ({booksOnBookshelf, changeBookshelf}) => {
                     />
                 </div>
             </div>
+
             <div className="search-books-results">
+                {alertState &&
+                    <div className="alert-box">
+                        <img src={Logo} alt="correct-tick" width="20"/>
+                        <p>Book has been added. <Link to="/home" className="check-link"><span>Check this out!</span></Link></p>
+                    </div>
+                }
+
                 <ol className="books-grid">
                     {searchBooks.length > 0 && searchBooks.map(book => {
 
@@ -62,9 +90,9 @@ const Search = ({booksOnBookshelf, changeBookshelf}) => {
                             <React.Fragment key={book.id}>
                                 <Book
                                     book={book}
-                                    changeBookshelf={changeBookshelf}
                                     currentShelf={currentShelf}
                                     shelfTitle={currentShelf ? Object.assign({ moveTo: "Move to..." }, shelfTitle):Object.assign({ addTo: "Add to..." }, shelfTitle)}
+                                    changeAlertState={changeAlertState}
                                 />
                             </React.Fragment>
                         )
@@ -76,7 +104,6 @@ const Search = ({booksOnBookshelf, changeBookshelf}) => {
 }
 
 Search.propTypes = {
-    booksOnBookshelf: PropTypes.object.isRequired,
-    changeBookshelf: PropTypes.func.isRequired,
+    booksOnBookshelf: PropTypes.object.isRequired
 }
 export default Search;

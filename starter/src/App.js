@@ -1,9 +1,15 @@
 import "./App.css";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+import Admin from "./pages/Admin";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import Search from "./pages/Search";
+import Detail from "./pages/Detail";
 import {Route, Routes} from "react-router-dom";
 import {getAll} from "./BooksAPI";
+import ProtectedRoute from "./ProtectedRoute";
+import {ChangeBookShelf} from "./contexts/ChangeBookShelf";
 
 function App() {
 
@@ -12,7 +18,7 @@ function App() {
         'wantToRead' : [],
         'read' : []
     });
-
+    // const [token, setToken] = useState("");
     useEffect(async () => {
         const books = await getAll();
         setBooksOnBookshelf({
@@ -40,8 +46,32 @@ function App() {
 
     return (
         <Routes>
-          <Route exact path="/" element={<Home booksOnBookshelf={booksOnBookshelf} changeBookshelf={changeBookshelf}/>}/>
-          <Route path="/search" element={<Search booksOnBookshelf={booksOnBookshelf} changeBookshelf={changeBookshelf}/>} />
+            <Route exact path="/" element={<Admin />} >
+                <Route index element={<Login />} />
+                <Route path="login" element={<Login />} ></Route>
+                <Route path="signup" element={<Signup />} ></Route>
+            </Route>
+
+                <Route path="/home" element={
+                    <ProtectedRoute>
+                        <ChangeBookShelf.Provider value={changeBookshelf}>
+                            <Home booksOnBookshelf={booksOnBookshelf} />
+                        </ChangeBookShelf.Provider>
+                    </ProtectedRoute>
+                }/>
+                <Route path="/search" element={
+                    <ProtectedRoute>
+                        <ChangeBookShelf.Provider value={changeBookshelf}>
+                            <Search booksOnBookshelf={booksOnBookshelf}/>
+                        </ChangeBookShelf.Provider>
+                    </ProtectedRoute>
+                }/>
+                <Route path="/detail/:bookId" element={
+                    <ProtectedRoute>
+                        <Detail />
+                    </ProtectedRoute>
+                } />
+
       </Routes>
   )
 }
