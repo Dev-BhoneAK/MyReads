@@ -102,6 +102,31 @@ body,
   font-size: 0;
 }
 
+.alert-box {
+  width: 90%;
+  margin: auto;
+  border: 1px solid #81c784;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  column-gap: 12px;
+  padding: 2px 12px;
+  border-radius: 10px;
+}
+
+.alert-box p {
+  font-size: 14px;
+}
+
+.check-link{
+  text-decoration: none;
+}
+
+.check-link span {
+  color: #81c784;
+  cursor: pointer;
+}
+
 .search-books-results {
   padding: 80px 10px 20px;
 }
