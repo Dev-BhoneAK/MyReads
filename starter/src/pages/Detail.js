@@ -44,12 +44,12 @@ const Detail = () => {
                             {bookDetail.authors && bookDetail.authors[0]}
                         </p>
                         <p className="book-info">
-                            <span className="info-title">Page Count: </span>
-                            {bookDetail.pageCount}
-                        </p>
-                        <p className="book-info">
                             <span className="info-title">Category: </span>
                             {bookDetail.categories && bookDetail.categories[0]}
+                        </p>
+                        <p className="book-info">
+                            <span className="info-title">Page Count: </span>
+                            {bookDetail.pageCount}
                         </p>
                         <p className="book-info">
                             <span className="info-title">Publisher: </span>
@@ -59,7 +59,7 @@ const Detail = () => {
                             <span className="info-title">Published Date: </span>
                             {bookDetail.publishedDate}
                         </p>
-                        <a href={bookDetail.previewLink} className="btn-preview">Book Preview</a>
+                        <a href={bookDetail.previewLink} className="btn-preview" target="_blank">Book Preview</a>
                     </div>
                 </div>
                 <div className="detail-bottom">

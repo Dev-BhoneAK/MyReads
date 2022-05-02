@@ -17,16 +17,6 @@ const Admin = () => {
                     <Link to="/signup"><li className={`tab ${active === 'signup' && 'active'}`} id="signup" onClick={addActiveClass}>Sign Up</li></Link>
                 </ul>
 
-                {/*<form action="#" id="signup">*/}
-                {/*    <h1>Login Form</h1>*/}
-                {/*    <div className="input-field">*/}
-                {/*        <label htmlFor="email">Email</label>*/}
-                {/*        <input type="email" name="email" required="email"/>*/}
-                {/*        <label htmlFor="password">Password</label>*/}
-                {/*        <input type="password" name="password" required/>*/}
-                {/*        <input type="submit" value="Login" className="button"/>*/}
-                {/*    </div>*/}
-                {/*</form>*/}
                 <Outlet />
             </div>
         </div>
