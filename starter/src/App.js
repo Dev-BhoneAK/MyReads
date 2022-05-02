@@ -6,7 +6,7 @@ import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import Search from "./pages/Search";
 import Detail from "./pages/Detail";
-import {Route, Routes} from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import {getAll} from "./BooksAPI";
 import ProtectedRoute from "./ProtectedRoute";
 import {ChangeBookShelf} from "./contexts/ChangeBookShelf";
@@ -18,7 +18,8 @@ function App() {
         'wantToRead' : [],
         'read' : []
     });
-    // const [token, setToken] = useState("");
+    const navigate = useNavigate();
+
     useEffect(async () => {
         const books = await getAll();
         setBooksOnBookshelf({
@@ -44,6 +45,11 @@ function App() {
         })
     }
 
+    const logout = () => {
+        sessionStorage.removeItem('user-token');
+        navigate('/');
+    }
+
     return (
         <Routes>
             <Route exact path="/" element={<Admin />} >
@@ -55,7 +61,7 @@ function App() {
                 <Route path="/home" element={
                     <ProtectedRoute>
                         <ChangeBookShelf.Provider value={changeBookshelf}>
-                            <Home booksOnBookshelf={booksOnBookshelf} />
+                            <Home booksOnBookshelf={booksOnBookshelf} logout={logout}/>
                         </ChangeBookShelf.Provider>
                     </ProtectedRoute>
                 }/>

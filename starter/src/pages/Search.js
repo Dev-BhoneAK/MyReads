@@ -2,7 +2,7 @@ import React from 'react';
 import {useState, useEffect} from "react";
 import {search} from "../BooksAPI";
 import Book from "../components/Book";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import Logo from '../icons/correct-tick.png';
 /**
@@ -15,7 +15,7 @@ const Search = ({booksOnBookshelf}) => {
     const [inputValue, setInputValue] = useState("");
     const [searchBooks, setSearchBooks] = useState([]);
     const [alertState, setAlertState] = useState(false);
-
+    const navigate = useNavigate();
     const shelfTitle = {
         'currentlyReading': 'Currently Reading',
         'wantToRead': 'Want to Read',
@@ -28,6 +28,8 @@ const Search = ({booksOnBookshelf}) => {
             if(inputValue !== ''){
                 const searchResult = await search(inputValue, 10);
                 if(searchResult.length > 0){
+                    sessionStorage.setItem('input-value', inputValue);
+                    sessionStorage.setItem('searched-books', JSON.stringify(searchResult));
                     setSearchBooks(searchResult);
                 }
             }else{
@@ -49,19 +51,29 @@ const Search = ({booksOnBookshelf}) => {
         }
     }, [alertState]);
 
+    useEffect(() => {
+        const inputValue = sessionStorage.getItem('input-value');
+        const searchResult = sessionStorage.getItem('searched-books');
+        inputValue && setInputValue(inputValue);
+        searchResult && setSearchBooks(JSON.parse(searchResult));
+    },[]);
+
     const changeAlertState = () => {
 
         setAlertState(true);
+    }
+
+    const closeSearch = () => {
+        sessionStorage.removeItem('input-value');
+        sessionStorage.removeItem('searched-books');
+        navigate('/home');
     }
 
     return (
         <div className="search-books">
 
             <div className="search-books-bar">
-                <Link to="/home"
-                      className="close-search">
-                        Close
-                </Link>
+                <a className="close-search" onClick={closeSearch}>Close</a>
                 <div className="search-books-input-wrapper">
                     <input
                         type="text"
@@ -70,13 +82,14 @@ const Search = ({booksOnBookshelf}) => {
                         onChange={(event) => setInputValue(event.target.value)}
                     />
                 </div>
+                <a className="close-search" onClick={closeSearch}>Logout</a>
             </div>
 
             <div className="search-books-results">
                 {alertState &&
                     <div className="alert-box">
                         <img src={Logo} alt="correct-tick" width="20"/>
-                        <p>Book has been added. <Link to="/home" className="check-link"><span>Check this out!</span></Link></p>
+                        <p>Book has been moved. <Link to="/home" className="check-link"><span>Check this out!</span></Link></p>
                     </div>
                 }
 
