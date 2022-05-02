@@ -10,13 +10,15 @@ import {Routes, Redirect} from 'react-router-dom';
  * @constructor
  * @param {object} booksOnBookshelf - state object that contains all the books those are standing on bookshelves
  */
-const Home = ({booksOnBookshelf}) => {
+const Home = ({booksOnBookshelf, logout}) => {
 
   return (
     <div className="app">
         <div className="list-books">
           <div className="list-books-title">
+            <div></div>
             <h1>MyReads</h1>
+            <a onClick={logout}>Logout</a>
           </div>
           <div className="list-books-content">
             <div>
