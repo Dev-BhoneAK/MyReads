@@ -6,6 +6,7 @@ import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import Search from "./pages/Search";
 import Detail from "./pages/Detail";
+import NotFound from "./pages/NotFound";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import {getAll} from "./BooksAPI";
 import ProtectedRoute from "./ProtectedRoute";
@@ -58,26 +59,27 @@ function App() {
                 <Route path="signup" element={<Signup />} ></Route>
             </Route>
 
-                <Route path="/home" element={
-                    <ProtectedRoute>
-                        <ChangeBookShelf.Provider value={changeBookshelf}>
-                            <Home booksOnBookshelf={booksOnBookshelf} logout={logout}/>
-                        </ChangeBookShelf.Provider>
-                    </ProtectedRoute>
-                }/>
-                <Route path="/search" element={
-                    <ProtectedRoute>
-                        <ChangeBookShelf.Provider value={changeBookshelf}>
-                            <Search booksOnBookshelf={booksOnBookshelf}/>
-                        </ChangeBookShelf.Provider>
-                    </ProtectedRoute>
-                }/>
-                <Route path="/detail/:bookId" element={
-                    <ProtectedRoute>
-                        <Detail />
-                    </ProtectedRoute>
-                } />
+            <Route path="/home" element={
+                <ProtectedRoute>
+                    <ChangeBookShelf.Provider value={changeBookshelf}>
+                        <Home booksOnBookshelf={booksOnBookshelf} logout={logout}/>
+                    </ChangeBookShelf.Provider>
+                </ProtectedRoute>
+            }/>
+            <Route path="/search" element={
+                <ProtectedRoute>
+                    <ChangeBookShelf.Provider value={changeBookshelf}>
+                        <Search booksOnBookshelf={booksOnBookshelf}/>
+                    </ChangeBookShelf.Provider>
+                </ProtectedRoute>
+            }/>
+            <Route path="/detail/:bookId" element={
+                <ProtectedRoute>
+                    <Detail />
+                </ProtectedRoute>
+            } />
 
+            <Route path='*' element={<NotFound />}/>
       </Routes>
   )
 }
